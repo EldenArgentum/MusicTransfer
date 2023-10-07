@@ -1,14 +1,16 @@
 import React, { useEffect } from "react"
-import APIController from "../api/APIController"
+import getToken from "../api/getToken"
+import { Button } from "@mui/material"
 
 const LandingPage = () => {
 
   useEffect(() => {
-    APIController()
+    console.log("first")
   }, [])
 
   return (
     <>
+    <Button onClick={() => getToken()}>asd</Button>
     </>
   )
 }

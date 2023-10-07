@@ -1,5 +1,5 @@
 
-const APIController = async () => {
+const getToken = async () => {
     const clientId = import.meta.env.VITE_CLIENTID //process.env.VITE_CLIENTID
     const clientSecret = import.meta.env.VITE_CLIENTSECRET // process.VITE_CLIENTSECRET
 
@@ -12,11 +12,10 @@ const APIController = async () => {
         body: 'grant_type=client_credentials&client_id=' + clientId + '&client_secret=' + clientSecret
     }
 
-    const result = fetch('https://accounts.spotify.com/api/token', authParameters)
-    .then(result => result.json())
-    .then(data => console.log(data))
+    const data = await fetch('https://accounts.spotify.com/api/token', authParameters)
+    const result = await data.json(data)
 
-    return result
+    return result.access_token
 }
 
-export default APIController
+export default getToken
