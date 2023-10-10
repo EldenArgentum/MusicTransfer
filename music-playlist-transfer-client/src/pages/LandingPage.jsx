@@ -4,13 +4,18 @@ import { Button } from "@mui/material"
 
 const LandingPage = () => {
 
+  const handleTestButton = async () => {
+    const token = getToken()
+    
+  }
+
   useEffect(() => {
     console.log("first")
   }, [])
 
   return (
     <>
-    <Button onClick={() => getToken()}>asd</Button>
+    <Button onClick={() => handleTestButton}>asd</Button>
     </>
   )
 }
