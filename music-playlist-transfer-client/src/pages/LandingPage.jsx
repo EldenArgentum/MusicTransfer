@@ -11,13 +11,9 @@ const LandingPage = () => {
     return token
   }
 
-  useEffect(() => {
-    console.log("first")
-  }, [])
-
   return (
     <>
-    <Button onClick={() => handleTestButton}>asd</Button>
+    <Button onClick={() => handleTestButton()} variant={"outlined"}>asd</Button>
     </>
   )
 }
