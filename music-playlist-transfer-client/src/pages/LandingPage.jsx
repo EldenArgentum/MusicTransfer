@@ -5,8 +5,10 @@ import { Button } from "@mui/material"
 const LandingPage = () => {
 
   const handleTestButton = async () => {
-    const token = getToken()
-    
+    console.log("kdfjlgnsdfng")
+    const token = await getToken()
+    console.log(token)
+    return token
   }
 
   useEffect(() => {
