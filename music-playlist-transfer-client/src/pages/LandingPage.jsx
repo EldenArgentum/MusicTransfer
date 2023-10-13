@@ -4,16 +4,9 @@ import { Button } from "@mui/material"
 
 const LandingPage = () => {
 
-  const handleTestButton = async () => {
-    console.log("kdfjlgnsdfng")
-    const token = await getToken()
-    console.log(token)
-    return token
-  }
-
   return (
     <>
-    <Button onClick={() => handleTestButton()} variant={"outlined"}>asd</Button>
+    <Button onClick={() => getToken()} variant={"outlined"}>asd</Button>
     </>
   )
 }
