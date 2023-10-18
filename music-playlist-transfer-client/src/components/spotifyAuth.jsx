@@ -17,7 +17,14 @@ const SpotifyAuth = () => {
     </svg>
     );
     return (
-    <Button startIcon={svgIcon} variant='contained' size='large' color='success'  href={authUrl}>Sign in with Spotify!</Button>
+    <Button 
+    startIcon={svgIcon}
+    variant='contained'
+    size='large'
+    color='success'
+    href={authUrl}>
+        Sign in with Spotify!
+    </Button>
     
     )
 }

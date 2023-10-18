@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config()
+const SpotifyWebApi = require("spotify-web-api-node")
 
-const clientId = process.env.SPOTIFY_CLIENT_ID;
-const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+const clientId = process.env.SPOTIFY_CLIENT_ID
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
+const redirectUri = process.env.SPOTIFY_REDIRECT_URI
 
-app.get('/spotify/token', async (req, res) => {
+
+
+app.get("/spotify/token", async (req, res) => {
 
   const authParameters = {
     method: 'POST',
@@ -25,6 +29,30 @@ app.get('/spotify/token', async (req, res) => {
     res.json({ error: error })
   }
 });
+
+app.post("/spotify/refresh", (req, res) => {
+  const refreshToken = req.body.refreshToken
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: redirectUri,
+    clientId: clientId,
+    clientSecret: clientSecret,
+    refreshToken,
+  })
+
+  spotifyApi
+    .refreshAccessToken()
+    .then(data => {
+      res.json({
+        accessToken: data.body.accessToken,
+        expiresIn: data.body.expiresIn,
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      res.sendStatus(400)
+    })
+})
+
 
 const PORT = 3000
 app.listen(PORT, () => {
