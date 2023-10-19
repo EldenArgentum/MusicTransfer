@@ -1,6 +1,15 @@
+import axios from "axios";
+
 const getToken = async () => {
-    const data = await fetch('http://localhost:3000/spotify/token')
-    const result = await data.json()
+  
+  try {
+    const response = await axios.get('http://localhost:3000/spotify/token')
+    const result = response.data
     return result.access_token
-}
-export default getToken
+    
+  } catch (error) {
+    console.log('Ran into an error:', error)
+  }
+};
+
+export default getToken;

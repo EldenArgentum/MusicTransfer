@@ -1,18 +1,27 @@
-import React from "react"
-import SpotifyAuth from "../components/spotifyAuth"
+import { useEffect } from "react"
+import SpotifyAuth from "../components/SpotifyAuth"
+import getToken from "../api/getToken"
+import { Button } from "@mui/material"
+import SpotifySection from "../components/spotifySection"
 
 
 const LandingPage = () => {
   // TODO:
-  // IF code EXISTS, RENDER THE INFO AND EVERYTHING.
+  // IF code FOR YOUTUBE/SPOTIFY, etc. EXISTS, RENDER THE INFO AND EVERYTHING.
   // IF code NOT EXISTS, RENDER THE SpotifyAuth COMPONENT TO GET CODE.
   // REPLICATE FOR SPOTIFY, YOUTUBE, etc.
-  const code = URLSearchParams()
+
+  const handleGetToken = async () => {
+    const token = await getToken()
+  }
+
+  const code = new URLSearchParams(document.location.search).get('code')
 
   return (
-    <>
-      <SpotifyAuth />
-    </>
+    <div>
+      <Button variant="outlined" onClick={() => handleGetToken()}>Get Token Button</Button>
+      {code ? <SpotifySection /> : <SpotifyAuth /> }
+    </div>
   )
 }
 
