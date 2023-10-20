@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config()
+const cors = require("cors")
 const SpotifyWebApi = require("spotify-web-api-node")
 
 const clientId = process.env.SPOTIFY_CLIENT_ID
@@ -8,6 +9,8 @@ const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
 const redirectUri = process.env.SPOTIFY_REDIRECT_URI
 
 const axios = require('axios');
+
+app.use(cors())
 
 app.get("/spotify/token", async (req, res) => {
   const authParameters = {
@@ -54,19 +57,22 @@ app.post("/spotify/refresh", async (req, res) => {
 })
 
 app.get('/spotify/playlists', async (req, res) => {
-  const { token, limit=50 } = req.query;
+  const { token } = req.query
+  const { limit } = req.query
+
   try {
     const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
       params: {
-        limit: limit,
+        token,
+        limit,
       },
     });
-    res.json(response.data);
+    res.json(response);
   } catch (error) {
-    res.status(error.response?.status || 500).json(error.response?.data || 'Internal Server Error');
+    res.send("error")
   }
 });
 

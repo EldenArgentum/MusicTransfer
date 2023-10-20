@@ -1,16 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import getPlaylists from '../api/getPlaylists'
 import { Button } from '@mui/material'
 import getToken from '../api/getToken'
 
 
 const SpotifySection = () => {
-    
+
+    const [token, setToken] = useState("")
 
     const handleClickButton = async () => {
-        const token = await getToken()
-        const playlists = await getPlaylists(token)
-        console.log(playlists)
+        if (!sessionStorage.getItem("access_token")) {
+            const tokenObj = await getToken()
+            setToken(token)
+        }
+        else {
+            setToken(token)
+        }
+        
+        // const playlists = await getPlaylists(token)
     }
 
     return ( 
