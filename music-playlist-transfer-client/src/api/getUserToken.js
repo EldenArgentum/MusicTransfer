@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const getToken = async () => {
-  
+const getUserToken = async (code) => {
+
   try {
-    const response = await axios.get('http://localhost:3000/spotify/access_token')
+    const response = await axios.get(`http://localhost:3000/spotify/user_token?code=${code}`)
     const result = response.data
+    console.log(result)
     sessionStorage.setItem("access_token", result.access_token)
     return result.access_token
 
@@ -13,4 +14,4 @@ const getToken = async () => {
   }
 };
 
-export default getToken;
+export default getUserToken;

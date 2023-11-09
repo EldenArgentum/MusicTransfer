@@ -12,7 +12,7 @@ const axios = require('axios');
 
 app.use(cors())
 
-app.get("/spotify/token", async (req, res) => {
+app.get("/spotify/access_token", async (req, res) => {
   const authParameters = {
     grant_type: 'client_credentials',
     client_id: clientId,
@@ -35,26 +35,27 @@ app.get("/spotify/token", async (req, res) => {
   }  
 });
 
-app.post("/spotify/refresh", async (req, res) => {
-  const refreshToken = req.body.refreshToken
-  const spotifyApi = new SpotifyWebApi({
-    redirectUri: redirectUri,
-    clientId: clientId,
-    clientSecret: clientSecret,
-    refreshToken,
-  })
+app.get('/spotify/user_token', async (req, res) => {
 
-  try {
-    const data = await spotifyApi.refreshAccessToken();
-    res.json({
-      accessToken: data.body.accessToken,
-      expiresIn: data.body.expiresIn,
-    });
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(400);
-  }
-})
+  const code = req.query.code;
+  const authParameters = {
+    code,
+    redirect_uri: redirectUri,
+    grant_type: 'authorization_code',
+  };
+
+const authOptions = {
+  method: 'post',
+  url: 'https://accounts.spotify.com/api/token',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    Authorization: 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64'),
+  },
+};
+
+res.json(authOptions)
+}
+);
 
 app.get('/spotify/playlists', async (req, res) => {
   const { token } = req.query

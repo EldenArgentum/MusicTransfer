@@ -13,7 +13,7 @@ const LandingPage = () => {
   const code = new URLSearchParams(document.location.search).get('code')  
   
   useEffect(() => {
-    sessionStorage.setItem("auth_code", code)
+    sessionStorage.setItem("code", code)
   }, [])
   
 
