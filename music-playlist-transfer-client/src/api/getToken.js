@@ -5,7 +5,7 @@ const getToken = async () => {
   try {
     const response = await axios.get('http://localhost:3000/spotify/access_token')
     const result = response.data
-    sessionStorage.setItem("access_token", result.access_token)
+    sessionStorage.setItem("accessToken", result.access_token)
     return result.access_token
 
   } catch (error) {

@@ -8,6 +8,7 @@ import getUserToken from '../api/getUserToken'
 const SpotifySection = () => {
 
     const [token, setToken] = useState("")
+    const [playlists, setPlaylist] = useState([])
 
     const handleClickButton = async () => {
         // if (!sessionStorage.getItem("access_token")) {
@@ -19,6 +20,9 @@ const SpotifySection = () => {
         // }
         const code = sessionStorage.getItem("code")
         const userToken = await getUserToken(code)
+        const retrievedPlaylists = await getPlaylists(userToken)
+        setPlaylist(retrievedPlaylists)
+        console.log(playlists)
         // const playlists = await getPlaylists(token)
     }
 

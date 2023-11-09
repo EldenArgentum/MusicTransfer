@@ -36,42 +36,46 @@ app.get("/spotify/access_token", async (req, res) => {
 });
 
 app.get('/spotify/user_token', async (req, res) => {
+    const code = req.query.code;
+  
+    const authParameters = {
+      code: code,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    };
+  
+    try {
+      const response = await axios.post('https://accounts.spotify.com/api/token', null, {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+        },
+        params: authParameters,
+      });
+      console.log(response)
+    
+      res.json(response.data)
 
-  const code = req.query.code;
-  const authParameters = {
-    code,
-    redirect_uri: redirectUri,
-    grant_type: 'authorization_code',
-  };
-
-const authOptions = {
-  method: 'post',
-  url: 'https://accounts.spotify.com/api/token',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    Authorization: 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64'),
-  },
-};
-
-res.json(authOptions)
-}
-);
+    } catch (error) {
+      console.error('Ran into an error:', error.response.data);
+      res.json({ error: error.message });
+    }
+  });
 
 app.get('/spotify/playlists', async (req, res) => {
-  const { token } = req.query
-  const { limit } = req.query
+  const user_token = req.query.user_token
 
   try {
     const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${user_token}`,
       },
       params: {
-        token,
-        limit,
+        token: user_token,
+        limit: 50,
       },
     });
-    res.json(response);
+    res.json(response.data);
   } catch (error) {
     res.send("error")
   }
