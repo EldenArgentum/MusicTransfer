@@ -62,6 +62,32 @@ app.get('/spotify/user_token', async (req, res) => {
     }
   });
 
+  app.get('/spotify/refresh_token', async (req, res) => {
+    const refresh_token = req.query.refresh_token;
+  
+    const authParameters = {
+      refresh_token: refresh_token,
+      grant_type: 'refresh_token',
+    };
+  
+    try {
+      const response = await axios.post('https://accounts.spotify.com/api/token', null, {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+        },
+        params: authParameters,
+      });
+      console.log(response)
+    
+      res.json(response.data)
+
+    } catch (error) {
+      console.error('Ran into an error:', error.response.data);
+      res.json({ error: error.message });
+    }
+  });
+
 app.get('/spotify/playlists', async (req, res) => {
   const user_token = req.query.user_token
 
