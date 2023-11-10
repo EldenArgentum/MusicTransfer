@@ -5,6 +5,6 @@ import { GlobalContextProvider } from "../context/GlobalContext"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GlobalContextProvider>
-    <Router />
+      <Router />
   </GlobalContextProvider>
 );

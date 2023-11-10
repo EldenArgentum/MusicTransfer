@@ -1,9 +1,8 @@
 import axios from "axios";
 
-const getUserToken = async (code) => {
-
+const getRefreshToken = async (refreshToken) => {
   try {
-    const response = await axios.get(`http://localhost:3000/spotify/user_token?code=${code}`)
+    const response = await axios.get(`http://localhost:3000/spotify/refresh_token?refresh_token=${refreshToken}`)
     const result = response.data
     sessionStorage.setItem("refreshToken", result.refresh_token)
     sessionStorage.setItem("userToken", result.access_token)
@@ -11,6 +10,6 @@ const getUserToken = async (code) => {
   } catch (error) {
     console.log('Ran into an error:', error)
   }
-};
+}
 
-export default getUserToken;
+export default getRefreshToken

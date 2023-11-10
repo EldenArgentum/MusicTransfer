@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import SpotifyAuth from "../components/SpotifyAuth"
-import SpotifySection from "../components/spotifySection"
+import SpotifySection from "../components/SpotifySection"
 import { useToken, useSetToken, useSetCount, useCount } from '../context/GlobalContext'
 
 
