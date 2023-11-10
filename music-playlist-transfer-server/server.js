@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config()
+const cors = require("cors")
 const SpotifyWebApi = require("spotify-web-api-node")
 
 const clientId = process.env.SPOTIFY_CLIENT_ID
@@ -9,7 +10,9 @@ const redirectUri = process.env.SPOTIFY_REDIRECT_URI
 
 const axios = require('axios');
 
-app.get("/spotify/token", async (req, res) => {
+app.use(cors())
+
+app.get("/spotify/access_token", async (req, res) => {
   const authParameters = {
     grant_type: 'client_credentials',
     client_id: clientId,
@@ -32,41 +35,75 @@ app.get("/spotify/token", async (req, res) => {
   }  
 });
 
-app.post("/spotify/refresh", async (req, res) => {
-  const refreshToken = req.body.refreshToken
-  const spotifyApi = new SpotifyWebApi({
-    redirectUri: redirectUri,
-    clientId: clientId,
-    clientSecret: clientSecret,
-    refreshToken,
-  })
+app.get('/spotify/user_token', async (req, res) => {
+    const code = req.query.code;
+  
+    const authParameters = {
+      code: code,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    };
+  
+    try {
+      const response = await axios.post('https://accounts.spotify.com/api/token', null, {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+        },
+        params: authParameters,
+      });
+      console.log(response)
+    
+      res.json(response.data)
 
-  try {
-    const data = await spotifyApi.refreshAccessToken();
-    res.json({
-      accessToken: data.body.accessToken,
-      expiresIn: data.body.expiresIn,
-    });
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(400);
-  }
-})
+    } catch (error) {
+      console.error('Ran into an error:', error.response.data);
+      res.json({ error: error.message });
+    }
+  });
+
+  app.get('/spotify/refresh_token', async (req, res) => {
+    const refresh_token = req.query.refresh_token;
+  
+    const authParameters = {
+      refresh_token: refresh_token,
+      grant_type: 'refresh_token',
+    };
+  
+    try {
+      const response = await axios.post('https://accounts.spotify.com/api/token', null, {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+        },
+        params: authParameters,
+      });
+      console.log(response)
+    
+      res.json(response.data)
+
+    } catch (error) {
+      console.error('Ran into an error:', error.response.data);
+      res.json({ error: error.message });
+    }
+  });
 
 app.get('/spotify/playlists', async (req, res) => {
-  const { token, limit=50 } = req.query;
+  const user_token = req.query.user_token
+
   try {
     const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${user_token}`,
       },
       params: {
-        limit: limit,
+        token: user_token,
+        limit: 50,
       },
     });
     res.json(response.data);
   } catch (error) {
-    res.status(error.response?.status || 500).json(error.response?.data || 'Internal Server Error');
+    res.send("error")
   }
 });
 

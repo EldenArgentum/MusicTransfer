@@ -1,8 +1,7 @@
 import { useEffect } from "react"
 import SpotifyAuth from "../components/SpotifyAuth"
-import getToken from "../api/getToken"
-import { Button } from "@mui/material"
-import SpotifySection from "../components/spotifySection"
+import SpotifySection from "../components/SpotifySection"
+import { useToken, useSetToken, useSetCount, useCount } from '../context/GlobalContext'
 
 
 const LandingPage = () => {
@@ -11,16 +10,17 @@ const LandingPage = () => {
   // IF code NOT EXISTS, RENDER THE SpotifyAuth COMPONENT TO GET CODE.
   // REPLICATE FOR SPOTIFY, YOUTUBE, etc.
 
-  const handleGetToken = async () => {
-    const token = await getToken()
-  }
-
-  const code = new URLSearchParams(document.location.search).get('code')
+  const code = new URLSearchParams(document.location.search).get('code')  
+  
+  useEffect(() => {
+    sessionStorage.setItem("code", code)
+  }, [])
+  
 
   return (
     <div>
-      <Button variant="outlined" onClick={() => handleGetToken()}>Get Token Button</Button>
       {code ? <SpotifySection /> : <SpotifyAuth /> }
+
     </div>
   )
 }
