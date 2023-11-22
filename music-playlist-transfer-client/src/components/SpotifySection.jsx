@@ -4,35 +4,40 @@ import { Button, setRef } from '@mui/material'
 import tokenRefresh from '../api/tokenRefresh'
 import getToken from '../api/getToken'
 import isNil from 'lodash'
+import isEmpty from 'lodash'
 
 
-const SpotifySection = () => {
+
+const SpotifySection = ({ code }) => {
     
-    const code = sessionStorage.getItem("code")
+
+    // const [code, setCode] = useState(code)
     const [accessToken, setAccessToken] = useState("")
+    const [refreshToken, setRefreshToken] = useState("")
+    const [playlists, setPlaylists] = useState([])
 
     useEffect(() => {
-      console.log(code)
+      console.log("COMPONENT CODE", code)
     }, [])
     
 
     const handleClickButton = async () => {
-        if(isNil(sessionStorage.getItem("refreshToken"))) {
+        if(!accessToken && !refreshToken) {
             const token = await getToken(code)
-            console.log("if", token)
-            setAccessToken(token)
+            setAccessToken(token.accessToken)
+            setRefreshToken(token.refreshToken)
+            console.log("if", accessToken, refreshToken)
         }
         else {
-            const refreshToken = sessionStorage.getItem("refreshToken")
             const token = await tokenRefresh(refreshToken)
-            console.log("else", token)
-            setAccessToken(token)
+            setAccessToken(token.accessToken)
+            setRefreshToken(token.refreshToken)
+            console.log("else", accessToken, refreshToken)
         }
-        // const userToken = await getToken(code)
+
         const retrievedPlaylists = await getPlaylists(accessToken)
         console.log("retrievedPlaylists",retrievedPlaylists)
-        retrievedPlaylists.map(playlist => ({
-        }))
+        setPlaylists(retrievedPlaylists)
         // const playlists = await getPlaylists(token)
     }
 

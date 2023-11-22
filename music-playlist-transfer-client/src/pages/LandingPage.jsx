@@ -9,13 +9,13 @@ const LandingPage = () => {
   const code = new URLSearchParams(document.location.search).get('code')  
   
   useEffect(() => {
-    sessionStorage.setItem("code", code)
+    console.log("LANDING PAGE HERE", code)
   }, [])
   
 
   return (
     <div>
-      {code ? <SpotifySection /> : <SpotifyAuth /> }
+      {code ? <SpotifySection code={code}/> : <SpotifyAuth /> }
 
     </div>
   )
