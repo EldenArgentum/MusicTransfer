@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const getPlaylists = async (userToken) => {
+const getPlaylists = async (accessToken) => {
 
   try {
-    const response = await axios.get(`http://localhost:3000/spotify/playlists?user_token=${userToken}`)
+    const response = await axios.get(`http://localhost:3000/spotify/playlists?access_token=${accessToken}`)
     return response.data.items
   }
   catch (error) {

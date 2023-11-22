@@ -12,17 +12,20 @@ const axios = require('axios');
 
 app.use(cors())
 
-app.get("/spotify/access_token", async (req, res) => {
+app.get('/spotify/access_token', async (req, res) => {
+  const code = req.query.code;
+
   const authParameters = {
-    grant_type: 'client_credentials',
-    client_id: clientId,
-    client_secret: clientSecret,
+    code: code,
+    redirect_uri: redirectUri,
+    grant_type: 'authorization_code',
   };
-  
+
   try {
     const response = await axios.post('https://accounts.spotify.com/api/token', null, {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'content-type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
       },
       params: authParameters,
     });
@@ -30,74 +33,47 @@ app.get("/spotify/access_token", async (req, res) => {
     res.json(response.data)
 
   } catch (error) {
-    console.error('Ran into an error:', error);
-    res.json({ error: error });
-  }  
+    console.error('Ran into an error on /access_token:', error);
+    res.json({ error: error.message });
+  }
 });
 
-app.get('/spotify/user_token', async (req, res) => {
-    const code = req.query.code;
-  
-    const authParameters = {
-      code: code,
-      redirect_uri: redirectUri,
-      grant_type: 'authorization_code',
-    };
-  
-    try {
-      const response = await axios.post('https://accounts.spotify.com/api/token', null, {
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
-        },
-        params: authParameters,
-      });
-      console.log(response)
-    
-      res.json(response.data)
 
-    } catch (error) {
-      console.error('Ran into an error:', error.response.data);
-      res.json({ error: error.message });
-    }
-  });
+app.get('/spotify/refresh_token', async (req, res) => {
+  const refresh_token = req.query.refresh_token;
 
-  app.get('/spotify/refresh_token', async (req, res) => {
-    const refresh_token = req.query.refresh_token;
-  
-    const authParameters = {
-      refresh_token: refresh_token,
-      grant_type: 'refresh_token',
-    };
-  
-    try {
-      const response = await axios.post('https://accounts.spotify.com/api/token', null, {
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
-        },
-        params: authParameters,
-      });
-      console.log(response)
-    
-      res.json(response.data)
+  const authParameters = {
+    refresh_token: refresh_token,
+    grant_type: 'refresh_token',
+  };
 
-    } catch (error) {
-      console.error('Ran into an error:', error.response.data);
-      res.json({ error: error.message });
-    }
-  });
+  try {
+    const response = await axios.post('https://accounts.spotify.com/api/token', null, {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
+      },
+      params: authParameters,
+    });
+  
+    res.json(response.data)
+
+  } catch (error) {
+    console.error('Ran into an error on refresh_token:', error.response.data);
+    res.json({ error: error.message });
+  }
+});
 
 app.get('/spotify/playlists', async (req, res) => {
-  const user_token = req.query.user_token
+  const accessToken = req.query.access_token
 
   try {
     const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
       headers: {
-        'Authorization': `Bearer ${user_token}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
       params: {
-        token: user_token,
+        token: accessToken,
         limit: 50,
       },
     });
@@ -110,5 +86,5 @@ app.get('/spotify/playlists', async (req, res) => {
 
 const PORT = 3000
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
+  console.log(`Server is running on port ↪ ${PORT} ↩`)
 });
