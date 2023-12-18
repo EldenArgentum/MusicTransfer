@@ -55,7 +55,7 @@ app.get('/spotify/refresh_token', async (req, res) => {
       },
       params: authParameters,
     });
-  
+
     res.json(response.data)
 
   } catch (error) {
