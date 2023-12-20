@@ -1,13 +1,22 @@
 import axios from "axios";
+import tokenRefresh from "./tokenRefresh";
 
 const getToken = async (code) => {
   try {
-    const response = await axios.get(`http://localhost:3000/spotify/access_token?code=${code}`)
-    const result = response.data
-    const resultObj = {'accessToken' : result.access_token, 'refreshToken' : result.refresh_token}
-    console.log(resultObj)
-    return resultObj
-
+    // if refresh token is in storage... then do the stuff. 
+    if (sessionStorage.getItem('refreshToken') !== "undefined" && sessionStorage.getItem('refreshToken')) {
+      const refreshToken = sessionStorage.getItem('refreshToken')
+      return tokenRefresh(refreshToken)
+    }
+    else {
+      console.log("not token refresh...")
+      const response = await axios.get(`http://localhost:3000/spotify/access_token?code=${code}`)
+      const result = response.data
+      console.log("getToken.js...",result)
+      const resultObj = {'accessToken' : result.access_token, 'refreshToken' : result.refresh_token}
+      sessionStorage.setItem('refreshToken', resultObj.refreshToken)
+      return resultObj
+    }
   } catch (error) {
     console.log('Ran into an error:', error)
   }

@@ -3,41 +3,24 @@ import getPlaylists from '../api/getPlaylists'
 import { Button, } from '@mui/material'
 import tokenRefresh from '../api/tokenRefresh'
 import getToken from '../api/getToken'
-
-
-
+import { useQuery } from '@tanstack/react-query'
 
 const SpotifySection = ({ code }) => {
-    
 
     // const [code, setCode] = useState(code)
-    const [accessToken, setAccessToken] = useState("")
-    const [refreshToken, setRefreshToken] = useState("")
-    const [playlists, setPlaylists] = useState([])
+    const [token, setToken] = useState({})
+    // const [refreshToken, setRefreshToken] = useState("")
 
-    useEffect(() => {
-      console.log("COMPONENT CODE", code)
-    }, [])
+    const tokenQuery = useQuery({
+        queryKey: ["token"],
+        queryFn: async () => await getToken(code)
+    })
     
-
+    
     const handleClickButton = async () => {
-        if(!accessToken && !refreshToken) {
-            const token = await getToken(code)
-            setAccessToken(token.accessToken)
-            setRefreshToken(token.refreshToken)
-            console.log("if", accessToken, refreshToken)
-        }
-        else {
-            const token = await tokenRefresh(refreshToken)
-            setAccessToken(token.accessToken)
-            setRefreshToken(token.refreshToken)
-            console.log("else", accessToken, refreshToken)
-        }
-
-        const retrievedPlaylists = await getPlaylists(accessToken)
-        console.log("retrievedPlaylists",retrievedPlaylists)
-        setPlaylists(retrievedPlaylists)
-        // const playlists = await getPlaylists(token)
+        console.log(tokenQuery)
+        console.log(tokenQuery.accessToken)
+        console.log(tokenQuery.refreshToken)
     }
 
     return ( 

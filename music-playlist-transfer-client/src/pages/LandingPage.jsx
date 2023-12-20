@@ -6,12 +6,7 @@ import SpotifySection from "../components/SpotifySection"
 const LandingPage = () => {
 
 
-  const code = new URLSearchParams(document.location.search).get('code')  
-  
-  useEffect(() => {
-    console.log("LANDING PAGE HERE", code)
-  }, [])
-  
+  const code = new URLSearchParams(document.location.search).get('code')   
 
   return (
     <div>
