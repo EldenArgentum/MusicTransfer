@@ -7,7 +7,7 @@ const getPlaylists = async (token) => {
     return response.data.items
   }
   catch (error) {
-    console.log('Ran into an error:', error)
+    console.error('Ran into an error:', error)
   }
 }
 

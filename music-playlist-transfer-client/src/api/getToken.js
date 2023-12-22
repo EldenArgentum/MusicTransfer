@@ -9,16 +9,14 @@ const getToken = async (code) => {
       return tokenRefresh(refreshToken)
     }
     else {
-      console.log("not token refresh...")
       const response = await axios.get(`http://localhost:3000/spotify/access_token?code=${code}`)
       const result = response.data
-      console.log("getToken.js...",result)
       const resultObj = {'accessToken' : result.access_token, 'refreshToken' : result.refresh_token}
       sessionStorage.setItem('refreshToken', resultObj.refreshToken)
       return resultObj
     }
   } catch (error) {
-    console.log('Ran into an error:', error)
+    console.error('Ran into an error:', error)
   }
 };
 

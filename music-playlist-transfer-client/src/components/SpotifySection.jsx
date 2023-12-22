@@ -1,40 +1,39 @@
 import React, { useEffect, useState } from 'react'
 import getPlaylists from '../api/getPlaylists'
 import { Button, CircularProgress} from '@mui/material'
-import tokenRefresh from '../api/tokenRefresh'
 import getToken from '../api/getToken'
 import { useQuery } from '@tanstack/react-query'
+import SpotifyPlaylists from './SpotifyPlaylists'
 
 const SpotifySection = ({ code }) => {
 
-    // const [code, setCode] = useState(code)
-    const [token, setToken] = useState({})
-    // const [refreshToken, setRefreshToken] = useState("")
+    const [isClicked, setIsClicked] = useState(false)
 
     const tokenQuery = useQuery({
         queryKey: ["token"],
-        queryFn: async () => {
-            const queriedToken = await getToken(code)
-            setToken(queriedToken.accessToken)
-        }
+        queryFn: async () => await getToken(code)
     })
-    
-    
+
+    const playlistQuery = useQuery({
+        queryKey: ["playlists"],
+        queryFn: async () => await getPlaylists(tokenQuery.data.accessToken),
+        enabled: !!tokenQuery.isSuccess
+    })
+
     const handleClickButton = async () => {
-        const playlistQuery = useQuery({
-            queryKey: ["playlists"],
-            queryFn: async () => {
-                const playlists = await getPlaylists(token)
-            }
-        })
-        
+        setIsClicked(true)
     }
+
+    // const playlists = () => {
+    //     return playlistQuery.data
+    // }
 
     return (
     <div>
     <Button onClick={() => handleClickButton()} variant='outlined'> Load the playlists! </Button>
 
-    {tokenQuery.isFetching ? <CircularProgress /> : <div>hello</div>}
+    {/*!playlistQuery.isFetched &&*/ !isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data}/>
+    }
     </div>
     )
 }
