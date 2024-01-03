@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import getPlaylists from '../api/getPlaylists'
-import { Button } from '@mui/material'
+import { Button, CircularProgress} from '@mui/material'
 import getToken from '../api/getToken'
-import getUserToken from '../api/getUserToken'
+import { useQuery } from '@tanstack/react-query'
+import SpotifyPlaylists from './SpotifyPlaylists'
 
+const SpotifySection = ({ code }) => {
 
-const SpotifySection = () => {
+    const [isClicked, setIsClicked] = useState(false)
 
-    const [token, setToken] = useState("")
-    const [playlists, setPlaylist] = useState([])
-    const [isButtonClicked, setIsButtonClicked] = useState(false)
+    const tokenQuery = useQuery({
+        queryKey: ["token"],
+        queryFn: async () => await getToken(code)
+    })
+
+    const playlistQuery = useQuery({
+        queryKey: ["playlists"],
+        queryFn: async () => await getPlaylists(tokenQuery.data.accessToken),
+        enabled: !!tokenQuery.isSuccess
+    })
 
     const handleClickButton = async () => {
-        const code = sessionStorage.getItem("code")
-        const userToken = await getUserToken(code)
-        const retrievedPlaylists = await getPlaylists(userToken)
-        console.log("retrievedPlaylists",retrievedPlaylists)
-        retrievedPlaylists.map(playlist => ({
-        }))
-        // const playlists = await getPlaylists(token)
+        setIsClicked(true)
     }
 
-    return ( 
+    return (
     <>
     <Button onClick={() => handleClickButton()} variant='outlined'> Load the playlists! </Button>
+    <div>
+    {!isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data}/>}
+    </div>
     </>
     )
 }

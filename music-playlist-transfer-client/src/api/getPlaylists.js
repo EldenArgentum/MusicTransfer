@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const getPlaylists = async (userToken) => {
+const getPlaylists = async (token) => {
 
   try {
-    const response = await axios.get(`http://localhost:3000/spotify/playlists?user_token=${userToken}`)
+    const response = await axios.get(`http://localhost:3000/spotify/playlists?access_token=${token}`)
     return response.data.items
   }
   catch (error) {
-    console.log('Ran into an error:', error)
+    console.error('Ran into an error:', error)
   }
 }
 
