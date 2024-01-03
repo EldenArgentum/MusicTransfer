@@ -40,10 +40,10 @@ app.get('/spotify/access_token', async (req, res) => {
 
 
 app.get('/spotify/refresh_token', async (req, res) => {
-  const refresh_token = req.query.refresh_token;
+  const refreshToken = req.query.refresh_token;
 
   const authParameters = {
-    refresh_token: refresh_token,
+    refresh_token: refreshToken,
     grant_type: 'refresh_token',
   };
 

@@ -24,17 +24,13 @@ const SpotifySection = ({ code }) => {
         setIsClicked(true)
     }
 
-    // const playlists = () => {
-    //     return playlistQuery.data
-    // }
-
     return (
-    <div>
+    <>
     <Button onClick={() => handleClickButton()} variant='outlined'> Load the playlists! </Button>
-
-    {/*!playlistQuery.isFetched &&*/ !isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data}/>
-    }
+    <div>
+    {!isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data}/>}
     </div>
+    </>
     )
 }
 
