@@ -25,7 +25,7 @@ const SpotifyPlaylists = ({ playlists, loading }) => {
       ))}
     </ul> */}
 
-    <DataGrid style={maxWidth='50%'}
+    <DataGrid
       rows={rows}
       columns={columns}
       loading={loading}
