@@ -19,12 +19,6 @@ const SpotifyPlaylists = ({ playlists, loading }) => {
 
   return (
     <div>
-    {/* <ul>
-      {playlists.map((playlist) => (
-        <li key={playlist.id}>{playlist.name}</li>
-      ))}
-    </ul> */}
-
     <DataGrid
       rows={rows}
       columns={columns}
