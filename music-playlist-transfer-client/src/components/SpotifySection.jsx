@@ -28,7 +28,7 @@ const SpotifySection = ({ code }) => {
     <>
     <Button onClick={() => handleClickButton()} variant='outlined'> Load the playlists! </Button>
     <div>
-    {!isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data}/>}
+    {!isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading}/>}
     </div>
     </>
     )
