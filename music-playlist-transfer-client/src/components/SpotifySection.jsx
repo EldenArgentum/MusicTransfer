@@ -7,8 +7,6 @@ import SpotifyPlaylists from './SpotifyPlaylists'
 
 const SpotifySection = ({ code }) => {
 
-    const [isClicked, setIsClicked] = useState(false)
-
     const tokenQuery = useQuery({
         queryKey: ["token"],
         queryFn: async () => await getToken(code)
@@ -20,15 +18,10 @@ const SpotifySection = ({ code }) => {
         enabled: !!tokenQuery.isSuccess
     })
 
-    const handleClickButton = async () => {
-        setIsClicked(true)
-    }
-
     return (
     <>
-    <Button onClick={() => handleClickButton()} variant='outlined'> Load the playlists! </Button>
     <div>
-    {!isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading}/>}
+    {!playlistQuery.isSuccess ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading}/>}
     </div>
     </>
     )

@@ -6,6 +6,13 @@ import { useQuery } from '@tanstack/react-query';
 const SpotifyPlaylists = ({ playlists, loading }) => {
 
   const [selectedRows, setSelectedRows] = useState()
+  const [buttonClicked, setButtonClicked] = useState('')
+
+  const playlistIdQuery = useQuery({
+    queryKey: ["selectedRows"],
+    queryFn: () => {return selectedRows},
+    enabled: !!buttonClicked
+  })
 
   const columns = [
     { field: 'title', headerName: 'Title', width: 300 },
@@ -21,25 +28,6 @@ const SpotifyPlaylists = ({ playlists, loading }) => {
     }
   })
 
-  const handleRowSelection = (e) => {
-    const playlistIds = e.map(playlist => {
-      return {
-        'id': e
-      }
-    }
-    )
-    setSelectedRows(playlistIds)
-  };
-
-  const playlistIdQuery = useQuery({
-    queryKey: ["selectedRows"],
-    queryFn: () => {return selectedRows},
-    enabled: !!selectedRows
-})
-
-  const handleButtonClick = () => {
-    console.log(selectedRows)
-  }
 
   return (
     <div>
@@ -55,7 +43,7 @@ const SpotifyPlaylists = ({ playlists, loading }) => {
       }}
       pageSizeOptions={[5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
       checkboxSelection
-      onRowSelectionModelChange={(e) => handleRowSelection(e)}
+      onRowSelectionModelChange={(e) => setSelectedRows(e.rows)}
       >
     </DataGrid>
 
