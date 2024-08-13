@@ -5,7 +5,7 @@ import SpotifySection from "../components/SpotifySection"
 const LandingPage = () => {
 
 
-  const code = new URLSearchParams(document.location.search).get('code')   
+  const code = new URLSearchParams(document.location.search).get('code')   // use session storage instead
 
   return (
     <div>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 // import { useQuery } from '@tanstack/react-query';
-import { atom, useAtom } from 'jotai';
-// import selectedRowsAtom
+import { useAtom } from 'jotai';
+
 
 const SpotifyPlaylists = ({ playlists, loading, selectedRowsAtom }) => {
 
@@ -25,7 +25,7 @@ const SpotifyPlaylists = ({ playlists, loading, selectedRowsAtom }) => {
   });
 
   const handleButtonClick = () => {
-    // console.log(selectedRows)
+    console.log(selectedRows)
   };
 
   return (
@@ -43,7 +43,6 @@ const SpotifyPlaylists = ({ playlists, loading, selectedRowsAtom }) => {
         pageSizeOptions={[5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
         checkboxSelection
         onRowSelectionModelChange={(ids) => {
-          console.log(ids)
           setSelectedRows([...ids])
         }
       }

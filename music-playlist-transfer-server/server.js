@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config()
 const cors = require("cors")
-const SpotifyWebApi = require("spotify-web-api-node")
 
 const clientId = process.env.SPOTIFY_CLIENT_ID
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET

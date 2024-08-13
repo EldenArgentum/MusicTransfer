@@ -11,22 +11,21 @@ const SpotifySection = ({ code }) => {
     const selectedRowsAtom = atom([])
 
     const tokenQuery = useQuery({
-        queryKey: ["token"],
-        queryFn: async () => await getToken(code)
+        queryKey: ["token", code],
+        queryFn: async () => await getToken(code),
+        enabled: Boolean(code)
     })
 
     const playlistQuery = useQuery({
-        queryKey: ["playlists"],
+        queryKey: ["playlists", tokenQuery?.data?.accessToken],
         queryFn: async () => await getPlaylists(tokenQuery.data.accessToken),
-        enabled: !!tokenQuery.isSuccess
+        enabled: Boolean(tokenQuery.isSuccess) //alternative to !!tokenQuery.isSuccess
     })
 
     return (
-    <>
     <div>
-    {!playlistQuery.isSuccess ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading} selectedRowsAtom={selectedRowsAtom}/>}
+    {tokenQuery?.isLoading ? <CircularProgress /> : playlistQuery.data && <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading} selectedRowsAtom={selectedRowsAtom}/>}
     </div>
-    </>
     )
 }
 
