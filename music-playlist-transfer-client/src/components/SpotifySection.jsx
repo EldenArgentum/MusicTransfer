@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import getPlaylists from '../api/getPlaylists'
 import { Button, CircularProgress} from '@mui/material'
 import getToken from '../api/getToken'
 import { useQuery } from '@tanstack/react-query'
 import SpotifyPlaylists from './SpotifyPlaylists'
+import { atom } from 'jotai'
 
 const SpotifySection = ({ code }) => {
 
-    const [isClicked, setIsClicked] = useState(false)
+    const selectedRowsAtom = atom([])
 
     const tokenQuery = useQuery({
         queryKey: ["token"],
@@ -20,15 +21,10 @@ const SpotifySection = ({ code }) => {
         enabled: !!tokenQuery.isSuccess
     })
 
-    const handleClickButton = async () => {
-        setIsClicked(true)
-    }
-
     return (
     <>
-    <Button onClick={() => handleClickButton()} variant='outlined'> Load the playlists! </Button>
     <div>
-    {!isClicked ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading}/>}
+    {!playlistQuery.isSuccess ? <CircularProgress /> : <SpotifyPlaylists playlists={playlistQuery.data} loading={playlistQuery.isLoading} selectedRowsAtom={selectedRowsAtom}/>}
     </div>
     </>
     )

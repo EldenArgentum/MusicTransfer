@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import SpotifyAuth from "../components/SpotifyAuth"
 import SpotifySection from "../components/SpotifySection"
 
