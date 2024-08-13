@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
+import { atom, useAtom } from 'jotai';
+// import selectedRowsAtom
 
-const SpotifyPlaylists = ({ playlists, loading }) => {
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [buttonClicked, setButtonClicked] = useState(false);
+const SpotifyPlaylists = ({ playlists, loading, selectedRowsAtom }) => {
+
+  const [selectedRows, setSelectedRows] = useAtom(selectedRowsAtom);
+  // const [buttonClicked, setButtonClicked] = useAtom(false);
 
   const columns = [
     { field: 'title', headerName: 'Title', width: 300 },
@@ -22,7 +25,7 @@ const SpotifyPlaylists = ({ playlists, loading }) => {
   });
 
   const handleButtonClick = () => {
-    setButtonClicked(true);
+    // console.log(selectedRows)
   };
 
   return (
@@ -40,12 +43,14 @@ const SpotifyPlaylists = ({ playlists, loading }) => {
         pageSizeOptions={[5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
         checkboxSelection
         onRowSelectionModelChange={(ids) => {
-          const selectedRowsData =
-        }}
+          console.log(ids)
+          setSelectedRows([...ids])
+        }
+      }
       >
       </DataGrid>
 
-      <Button onClick={() => console.log(selectedRows)}>Please Click me</Button>
+      <Button onClick={() => handleButtonClick()}>Please Click me</Button>
     </div>
   );
 };
