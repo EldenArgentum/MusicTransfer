@@ -11,6 +11,10 @@ const axios = require("axios")
 
 app.use(cors())
 
+//
+// SPOTIFY
+//
+
 app.get("/spotify/access_token", async (req, res) => {
 	const code = req.query.code
 
@@ -93,6 +97,17 @@ app.get("/spotify/playlists", async (req, res) => {
 		res.send("error")
 	}
 })
+
+
+
+
+//
+// YOUTUBE
+//
+
+
+
+
 
 const PORT = 3000
 app.listen(PORT, () => {
