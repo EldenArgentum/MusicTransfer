@@ -3,9 +3,15 @@ const app = express()
 const dotenv = require("dotenv").config()
 const cors = require("cors")
 
-const clientId = process.env.SPOTIFY_CLIENT_ID
-const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
-const redirectUri = process.env.SPOTIFY_REDIRECT_URI
+// SPOTIFY
+const spotifyClientId = process.env.SPOTIFY_CLIENT_ID
+const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET
+const spotifyRedirectUri = process.env.SPOTIFY_REDIRECT_URI
+
+// YT
+const youtubeClientId = process.env.YOUTUBE_CLIENT_ID
+const youtubeClientSecret = process.env.YOUTUBE_CLIENT_SECRET
+
 
 const axios = require("axios")
 
@@ -20,7 +26,7 @@ app.get("/spotify/access_token", async (req, res) => {
 
 	const authParameters = {
 		code: code,
-		redirect_uri: redirectUri,
+		redirect_uri: spotifyRedirectUri,
 		grant_type: "authorization_code",
 	}
 
@@ -33,7 +39,7 @@ app.get("/spotify/access_token", async (req, res) => {
 					"content-type": "application/x-www-form-urlencoded",
 					Authorization:
 						"Basic " +
-						new Buffer.from(clientId + ":" + clientSecret).toString("base64"),
+						new Buffer.from(spotifyClientId + ":" + spotifyClientSecret).toString("base64"),
 				},
 				params: authParameters,
 			}
@@ -63,7 +69,7 @@ app.get("/spotify/refresh_token", async (req, res) => {
 					"content-type": "application/x-www-form-urlencoded",
 					Authorization:
 						"Basic " +
-						new Buffer.from(clientId + ":" + clientSecret).toString("base64"),
+						new Buffer.from(spotifyClientId + ":" + spotifyClientSecret).toString("base64"),
 				},
 				params: authParameters,
 			}
@@ -94,20 +100,49 @@ app.get("/spotify/playlists", async (req, res) => {
 		)
 		res.json(response.data)
 	} catch (error) {
-		res.send("error")
+		console.error(
+			"Ran into an error on fetching playlists:",
+			error.response.data
+		)
+		res.json({ error: error.message })
 	}
 })
-
-
-
 
 //
 // YOUTUBE
 //
 
-
-
-
+app.get('/callback', async (req, res) => {
+	const code = req.query.code;
+  
+	try {
+	  const response = await axios.post(
+		'https://oauth2.googleapis.com/token',
+		qs.stringify({
+		  code,
+		  client_id: CLIENT_ID,
+		  client_secret: CLIENT_SECRET,
+		  redirect_uri: REDIRECT_URI,
+		  grant_type: 'authorization_code',
+		}),
+		{
+		  headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		  },
+		}
+	  );
+  
+	  const { access_token, refresh_token } = response.data;
+  
+	  // Save tokens securely (e.g., in a database or in session storage)
+	  // Redirect the user to a success page or wherever you want
+  
+	  res.json({ access_token, refresh_token });
+	} catch (error) {
+	  console.error('Error exchanging code for token:', error);
+	  res.status(500).send('Error during OAuth flow');
+	}
+  });
 
 const PORT = 3000
 app.listen(PORT, () => {
