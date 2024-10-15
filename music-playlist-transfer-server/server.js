@@ -26,7 +26,7 @@ app.get("/spotify/access_token", async (req, res) => {
 
 	const authParameters = {
 		code: code,
-		redirect_uri: spotifyRedirectUri,
+		redirect_uri: "http://localhost:5173/",
 		grant_type: "authorization_code",
 	}
 
